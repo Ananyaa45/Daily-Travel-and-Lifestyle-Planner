@@ -1,0 +1,3 @@
+/** Background from Stitch reference export */
+export const STITCH_LANDSCAPE_URL =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuAzRcQkx7fw6j-EhCiK1fsGFIgvsfRc_Te6cvDvs2wdEmGBGrCz9VASTYLXzUyHT30eOEeO5LBMDUcJny-mEh735NqcQ7hZZuFF9dSSxdJbYqMKjfVKOEvpbG6gdxSqfLu6iKOqAzG4EumiCWpx8zjEi1SRFZjqp6fZaNsmZGIR8O14H1slrDmeJpjUdIYO2AYwaznj8mVhsKZmstbQ2EJpyKFye2f5TXwEcbhu8wmWhpUr_9fUFCfiFjrgvVtMCejNuiGNF06uofEl";
