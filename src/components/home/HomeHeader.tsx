@@ -60,6 +60,15 @@ export function HomeHeader({
                       {weather.icon}
                     </span>
                     {weather.temperature}°C • {weather.condition}
+                    {weather.aqi != null && (
+                      <> • AQI {weather.aqi}</>
+                    )}
+                    {weather.aqiLabel && (
+                      <span className="normal-case tracking-normal text-on-surface-variant/80">
+                        {" "}
+                        ({weather.aqiLabel})
+                      </span>
+                    )}
                   </span>
                   <span className="hidden text-on-surface-variant/40 sm:inline">
                     ·

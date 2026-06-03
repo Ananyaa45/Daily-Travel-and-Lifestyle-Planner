@@ -20,6 +20,9 @@ export interface WeatherInfo {
   temperature: number;
   condition: string;
   icon: string;
+  /** Indian NAQI (data.gov.in / CPCB dataset), when available. */
+  aqi?: number | null;
+  aqiLabel?: string | null;
 }
 
 export interface TimelineItem {

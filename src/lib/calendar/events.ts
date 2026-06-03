@@ -31,6 +31,10 @@ export interface CalendarEvent {
 interface FetchOptions {
   hoursAhead?: number; // default 24
   maxResults?: number; // default 20
+  /** Overrides default "from now" (friends full-day overlap). */
+  timeMin?: Date;
+  /** Overrides now + hoursAhead (e.g. end of today IST). */
+  timeMax?: Date;
 }
 
 /**
@@ -61,8 +65,10 @@ export async function getUpcomingEvents(
   });
 
   const hoursAhead = options.hoursAhead ?? 24;
-  const timeMin = new Date().toISOString();
-  const timeMax = new Date(Date.now() + hoursAhead * 3600 * 1000).toISOString();
+  const timeMin = (options.timeMin ?? new Date()).toISOString();
+  const timeMax = (
+    options.timeMax ?? new Date(Date.now() + hoursAhead * 3600 * 1000)
+  ).toISOString();
 
   try {
     const cal = google.calendar({ version: "v3", auth: oauth2 });

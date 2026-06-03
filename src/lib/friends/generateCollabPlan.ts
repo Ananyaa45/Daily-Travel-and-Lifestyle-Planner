@@ -112,8 +112,8 @@ async function buildMergedCollabEvents(
   friend: SaanjhUser
 ): Promise<CollabSerializedCalendarEvent[]> {
   const [myEvents, friendEvents] = await Promise.all([
-    getMergedScheduleEvents(me, HOURS_AHEAD),
-    getMergedScheduleEvents(friend, HOURS_AHEAD),
+    getMergedScheduleEvents(me, HOURS_AHEAD, { includeEarlierToday: true }),
+    getMergedScheduleEvents(friend, HOURS_AHEAD, { includeEarlierToday: true }),
   ]);
 
   const meLabel = me.display_name?.trim() || "You";
@@ -205,8 +205,8 @@ export async function generateCollabPlan(
   // Merge both users' events into a single busy set so allocateSlots won't
   // place a collab stop during either person's meeting.
   const [myEvents, friendEvents] = await Promise.all([
-    getMergedScheduleEvents(me, HOURS_AHEAD),
-    getMergedScheduleEvents(friend, HOURS_AHEAD),
+    getMergedScheduleEvents(me, HOURS_AHEAD, { includeEarlierToday: true }),
+    getMergedScheduleEvents(friend, HOURS_AHEAD, { includeEarlierToday: true }),
   ]);
   const combinedEvents = [
     ...clipEventsToToday(myEvents),

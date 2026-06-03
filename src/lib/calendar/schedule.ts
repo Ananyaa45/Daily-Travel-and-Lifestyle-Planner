@@ -4,6 +4,7 @@ import {
   type CalendarEvent,
 } from "@/lib/calendar/events";
 import {
+  istTodayAtHHMM,
   manualEntriesToEvents,
   mergeScheduleEvents,
   resolveManualWindow,
@@ -66,14 +67,27 @@ export function userHasScheduleSource(
   );
 }
 
+export type MergedScheduleOptions = {
+  /** Load Google events from midnight IST today (friend overlap). */
+  includeEarlierToday?: boolean;
+};
+
 export async function getMergedScheduleEvents(
   user: SaanjhUser,
-  hoursAhead = DEFAULT_HOURS_AHEAD
+  hoursAhead = DEFAULT_HOURS_AHEAD,
+  options: MergedScheduleOptions = {}
 ): Promise<CalendarEvent[]> {
-  const calendarEvents = await getUpcomingEvents(user, {
+  const calendarFetchOptions: Parameters<typeof getUpcomingEvents>[1] = {
     hoursAhead,
     maxResults: 40,
-  });
+  };
+
+  if (options.includeEarlierToday) {
+    calendarFetchOptions.timeMin = istTodayAtHHMM("00:00");
+    calendarFetchOptions.timeMax = istTodayAtHHMM("23:59");
+  }
+
+  const calendarEvents = await getUpcomingEvents(user, calendarFetchOptions);
   const manualEvents = manualEntriesToEvents(
     parseManualSchedule(user.manual_schedule)
   );

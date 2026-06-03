@@ -6,6 +6,7 @@ import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { HomeHeader } from "@/components/home/HomeHeader";
 import { BottomNav } from "@/components/home/BottomNav";
 import { MOCK_WEATHER } from "@/lib/mock/homePlan";
+import type { WeatherInfo } from "@/lib/types/home";
 import { PillButton, PreferenceChip } from "@/components/profile/PillButton";
 import { BottomSheet, GlassInput, GlassSelect } from "@/components/profile/BottomSheet";
 import { cn } from "@/lib/utils/cn";
@@ -420,6 +421,7 @@ export default function ProfilePage() {
   const [calendars, setCalendars] = useState<ConnectedCalendar[]>([]);
   const [dietary, setDietary] = useState<DietarySettings | null>(null);
   const [loading, setLoading] = useState(true);
+  const [weather, setWeather] = useState<WeatherInfo>(MOCK_WEATHER);
 
   const [showAddWardrobe, setShowAddWardrobe] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -436,11 +438,12 @@ export default function ProfilePage() {
   useEffect(() => {
     (async () => {
       try {
-        const [pRes, wRes, cRes, dRes] = await Promise.allSettled([
+        const [pRes, wRes, cRes, dRes, weatherRes] = await Promise.allSettled([
           fetch("/api/profile"),
           fetch("/api/wardrobe"),
           fetch("/api/calendars"),
           fetch("/api/dietary"),
+          fetch("/api/weather"),
         ]);
 
         if (pRes.status === "fulfilled" && pRes.value.ok) {
@@ -460,6 +463,11 @@ export default function ProfilePage() {
         if (dRes.status === "fulfilled" && dRes.value.ok) {
           setDietary(await dRes.value.json());
         } else setDietary(DEMO_DIETARY);
+
+        if (weatherRes.status === "fulfilled" && weatherRes.value.ok) {
+          const data = (await weatherRes.value.json()) as { weather?: WeatherInfo };
+          if (data.weather) setWeather(data.weather);
+        }
       } catch {
         setProfile(DEMO_PROFILE);
         setWardrobe(DEMO_WARDROBE);
@@ -570,7 +578,7 @@ export default function ProfilePage() {
       <AuroraBackground variant="sanctuary">
         <HomeHeader
           userName="there"
-          weather={MOCK_WEATHER}
+          weather={weather}
           profileImageUrl={null}
         />
         <main className="mx-auto flex min-h-dvh max-w-[600px] items-center justify-center px-6 pb-40 pt-28">
@@ -593,7 +601,7 @@ export default function ProfilePage() {
     <AuroraBackground variant="sanctuary">
       <HomeHeader
         userName={headerName}
-        weather={MOCK_WEATHER}
+        weather={weather}
         profileImageUrl={headerPhoto}
         onSettingsClick={() => setShowEditProfile(true)}
       />

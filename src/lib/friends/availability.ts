@@ -275,7 +275,9 @@ type ScheduleUser = Pick<
 export async function fetchFreeWindows(user: SaanjhUser): Promise<TimeWindow[]> {
   const dayStart = startOfTodayIST();
   const dayEnd = endOfTodayIST();
-  const events = await getMergedScheduleEvents(user, HOURS_AHEAD);
+  const events = await getMergedScheduleEvents(user, HOURS_AHEAD, {
+    includeEarlierToday: true,
+  });
   return findFreeWindowsInRange(
     events,
     dayStart,
